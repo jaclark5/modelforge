@@ -361,11 +361,16 @@ class Potential(torch.nn.Module):
         if "per_system_vdw_energy" in postprocessing._registered_properties:
             # double check if nvalchemiops works with JIT
             log.warning(
-                "JIT compiling the postprocessing module with vdw interactions will not work if using tad-dftd3."
+                "JIT compiling the postprocessing module with vdw interactions will not work if using tad-dftd3.",
+                once=True,
             )
-            log.warning("tad-dftd3 packaged is not compatible with torchscript.")
             log.warning(
-                "Use nvalchemiops as the DFTD3 engine or disable JIT compilation by setting jit=False."
+                "tad-dftd3 packaged is not compatible with torchscript.",
+                once=True,
+            )
+            log.warning(
+                "Use nvalchemiops as the DFTD3 engine or disable JIT compilation by setting jit=False.",
+                once=True,
             )
 
         # self.postprocessing = (
@@ -697,9 +702,9 @@ class Potential(torch.nn.Module):
             filtered_state_dict[key] = value
 
         if prefixes_removed:
-            log.debug(f"Removed prefixes: {prefixes_removed}")
+            log.debug(f"Removed prefixes: {prefixes_removed}", once=True)
         else:
-            log.debug("No prefixes found. No modifications to keys in state loading.")
+            log.debug("No prefixes found. No modifications to keys in state loading.", once=True)
 
         super().load_state_dict(
             filtered_state_dict,
